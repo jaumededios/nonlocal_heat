@@ -1,0 +1,192 @@
+\documentclass[a4paper, 11pt]{article}
+\usepackage{comment} % enables the use of multi-line comments (\ifx \fi) 
+\usepackage{lipsum} %This package just generates Lorem Ipsum filler text. 
+\usepackage{fullpage} % changes the margin
+
+\usepackage{amsmath}
+
+\title{Nonlocal Diffusion of Heat}
+\author{Jaume}
+\begin{document}
+
+
+\section{Study of the PDE} % (fold)
+\label{sec:study_of_the_pde}
+
+The 3-dimensional PDE we will study is:
+
+\begin{equation}
+	\label{eq:hydrodinamic_pde}
+	\begin{cases}
+		{c_v T_t + \nabla \cdot q =0} \\
+		{q +\kappa \nabla T + l^2(\nabla(\nabla \cdot q) + 2*\triangle^{\otimes 3} q) = 0}
+	\end{cases}
+\end{equation}
+
+\subsection{A one dimensional toy model} % (fold)
+\label{sub:a_one_dimensional_toy_model}
+
+% subsection a_one_dimensional_toy_model_ (end)
+
+First, let's make some 1-dimensional back-of-the-envelope calculations. In 1 dimension, the equation reads:
+
+\begin{equation}
+	\begin{cases}
+		{c_v T_t + q_x =0} \\
+		{q +\kappa T_x+ 3 l^2 q_{xx} = 0}
+	\end{cases}
+\end{equation}
+
+The $\omega$-periodic solutions to this PDE can be found using the classical ansatz:
+
+\begin{equation}
+	\begin{aligned}
+		T = \exp(i \omega t - k x) \\
+		q = b \exp(i \omega t - k x)
+	\end{aligned}
+\end{equation}
+for possibly complex b,k. The parameter relationships then become:
+
+\begin{equation}
+	\label{eq:ansatz_coeff_matching}
+	\begin{cases}
+		{c_v i \omega - k b =0} \\
+		{b -\kappa k+ 3 l^2 bk^2 = 0}
+	\end{cases}
+\end{equation}
+Multiplying the second equation by $k$ and substituting $kb$ from the first one, this becomes:
+
+\begin{equation}
+		{c_v i \omega -\kappa k^2+ 3 l^2 k^2 c_v i \omega = 0}
+\end{equation}
+and therefore
+
+\begin{equation}
+	k^2 = \frac{i c_v \omega}{\kappa} \left(1 - 3l^2\frac{i c_v \omega}{\kappa}\right)^{-1}
+\end{equation}
+note that (perturbatively) $k$ has a complex phase angle of $45^{o}$ and has a modulus of $\left(\frac{ c_v \omega}{\kappa}\right)^{1/2}$ , and therefore the penetration length $\lambda$ of the heat wave is $\frac{1}{\Re(k)} = \frac{\sqrt 2}{|k|}$. Therefore:
+
+\begin{equation}
+	k^2 \approx k_0^2 \left(1 - 3 i l^2
+	|k|^2\right)^{-1} = k_0^2 \left(1 - 6 i \left(\frac{l}{\lambda}\right)^2\right)^{-1}
+\end{equation}
+
+By using the first equation on \eqref{eq:ansatz_coeff_matching}, we see that:
+
+\begin{equation}
+	b^2 \approx b_0^2 \left(1 - 6 i \left(\frac{l}{\lambda}\right)^2\right)
+\end{equation}
+
+therefore, approximately
+
+
+\begin{equation}
+	b \approx b_0 \left(1 - 3 i \left(\frac{l}{\lambda}\right)^2\right)
+\end{equation}
+
+\textbf{Remark:} A posteriori this computations turned out to be useless because we cannot simply relate on frequency related efects. This is because we have no clue of how do frequency-dependent issues work in the boundary between the metal and the silicon.
+
+\subsection{A surprising argument} % (fold)
+\label{sub:a_surprising_argument}
+
+Let $(T_0,q_0)$ be the solution to a stationary fourier problem. That implies the following properties:
+
+\begin{itemize}
+	\item $\triangle T = 0$
+	\item $\triangle q = 0$ (because $Q=\nabla T$ and gradients and laplacians commute)
+	\item $\nabla q = 0$
+\end{itemize}
+
+therefore $l^2(2 \nabla (\nabla \cdot q )+ \triangle q)$ is equal to zero, and the solution to the hydrodinamic problem shoud be the same. This contradicts previous results by COMSOL, so must be something fishy in my argument.
+
+A troublesome way to bring those two results together would be to assume the solution to the pde is not unique.
+
+% subsection a_surprising_fact_ (end)
+\subsection{Some simplification on the PDE} % (fold)
+\label{subname:some_simplification_on_the_pde}
+
+By simply plugging the second equation on the first one, and using the equality $\nabla \cdot \triangle^{\otimes 3} = \triangle \nabla \cdot {}$, we obtain the (simpler) pde:
+
+\begin{equation}
+	c_v(1+3l^2 \triangle)\dot T = \kappa \triangle T
+\end{equation}
+
+In the case of $\omega-$periodic solutions, we can make the ansatz $\frac{d}{dt} = i w$ this becomes an eigenvalue problem:
+
+\begin{equation}
+	T = -i\left(\frac{\kappa}{c_v \omega} - 3 l^2\right) \triangle T
+\end{equation}
+
+While this, a priori, gives a new understanding of the PDE it is not as deep as it might look at first time, because new boundary conditions are not trivial anymore (there is no way to directly, pointwise, recover $q$ from $T$, one has to solve a new PDE). In problems where only Dirichlet conditions on T are given, however, this method would simplify the computations.  
+% subsection subsection_name (end)
+
+\subsection{Perturbative analysis of the PDE} % (fold)
+\label{sub:perturbative_analysis_of_the_pde}
+
+As an other approach, since $l^2$ is small, one can attempt to compute the derivative of the solutions with respect to $l^2$ (which will be denoted $T_l$, and use those as tools to see where to check for a solution. By doing so, one obtains:
+
+
+\begin{equation}
+	\label{eq:hydrodinamic_pde_derivative}
+	\begin{cases}
+		{c_v \dot T_l + \nabla \cdot q_l =0} \\
+		{q_l +\kappa \nabla T_l + \nabla(\nabla \cdot q) + 2*\triangle^{\otimes 3} q = 0}
+	\end{cases}
+\end{equation}
+
+Intuitively, we can understand this system as a system where there is an extra pumped heat, given by the term $-\nabla(\nabla \cdot q) - 2*\triangle^{\otimes 3} q$ to the system. Therefore, in an attempt to solve this system, let $\tilde q =q + \nabla(\nabla \cdot q) + 2*\triangle^{\otimes 3} q$ (the heat current minus the pumped heat). With this change of variables, the equation becomes:
+
+
+\begin{equation}
+	\label{eq:hydrodinamic_pde_derivative_tilde}
+	\begin{cases}
+		{c_v \dot T_l + \nabla \cdot \tilde q = \nabla \cdot(\nabla(\nabla \cdot q) + 2*\triangle^{\otimes 3} q) } \\
+		{\tilde q +\kappa \nabla T_l  = 0}
+	\end{cases}
+\end{equation}
+
+If we use again the equality $\nabla \cdot \triangle^{\otimes 3} = \triangle \nabla \cdot {}$ and the inital equation ${c_v T_t + \nabla \cdot q =0}$, one finds:
+
+\begin{equation}
+	\label{eq:hydrodinamic_pde_derivative_tilde_2}
+	\begin{cases}
+		{c_v \dot T_l + \nabla \cdot \tilde q = -3 c_v \dot T} \\
+		{\tilde q +\kappa \nabla T_l  = 0}
+	\end{cases}
+\end{equation}
+
+This equation is akin to the original fourier equation, with the difference that now there is an external heat source inside the material.
+
+
+\begin{equation}
+	\label{eq:hydrodinamic_pde_derivative_tilde_2}
+	\begin{cases}
+		{ i \omega c_v  T_l + \nabla \cdot \tilde q = -3 i \omega c_v  T} \\
+		{\tilde q +\kappa \nabla T_l  = 0}
+	\end{cases}
+\end{equation}
+
+Using the same arguments as in the previous sections one can see that $\triangle q_0 = \nabla(\nabla\dot q) = \frac{i \omega c_v}{k} q$, and thus $q_1-\tilde q$ has zero perpendicular component in the boundary. Since $q_1$, by Neumann conditions has the zero perpendicular component, the same must apply to $\tilde q$
+
+\begin{equation}
+	\begin{cases}
+		T = 0, & \text{On the heater boundary}\\
+		\tilde q_\bot = 0 , & \text{Elsewhere}                     
+	\end{cases}
+\end{equation}
+
+So we can understand the phonon case as an extra heat term that appears.
+
+
+% subsection perturbative_analysis_of_the_pde (end)
+
+% section study_of_the_pde (end)
+
+\section{The Experiment} % (fold)
+\label{sec:the_experiment}
+
+We are in a situation where we do not (fully) know the physics inside the dectector, but we can assume it is some kind of linear-reacting object, at least near equilibrium.
+
+Therefore we want to avoid using it in our computations. This leads to the use of the \textit{Impedance method}. 
+% section the_experiment (end)
+\end{document}
