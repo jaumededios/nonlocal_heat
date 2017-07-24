@@ -2,7 +2,7 @@
 \usepackage{comment} % enables the use of multi-line comments (\ifx \fi) 
 \usepackage{lipsum} %This package just generates Lorem Ipsum filler text. 
 \usepackage{fullpage} % changes the margin
-
+\usepackage{todonotes}
 \usepackage{amsmath}
 
 \title{Nonlocal Diffusion of Heat}
@@ -166,7 +166,7 @@ This equation is akin to the original fourier equation, with the difference that
 	\end{cases}
 \end{equation}
 
-Using the same arguments as in the previous sections one can see that $\triangle q_0 = \nabla(\nabla\dot q) = \frac{i \omega c_v}{k} q$, and thus $q_1-\tilde q$ has zero perpendicular component in the boundary. Since $q_1$, by Neumann conditions has the zero perpendicular component, the same must apply to $\tilde q$
+Using the same arguments as in the previous sections one can see that $\triangle q_0 = \nabla(\nabla\dot q) = \frac{i \omega c_v}{k} q$, and thus $q_1-\tilde ¡q$ has zero perpendicular component in the boundary. Since $q_1$, by Neumann conditions has the zero perpendicular component, the same must apply to $\tilde q$
 
 \begin{equation}
 	\begin{cases}
@@ -185,8 +185,25 @@ So we can understand the phonon case as an extra heat term that appears.
 \section{The Experiment} % (fold)
 \label{sec:the_experiment}
 
-We are in a situation where we do not (fully) know the physics inside the dectector, but we can assume it is some kind of linear-reacting object, at least near equilibrium.
+We are in a situation where we do not (fully) know the physics inside the dectector, but we can assume it is some kind of linear-reacting object, at for small $\Delta{T}$.
 
-Therefore we want to avoid using it in our computations. This leads to the use of the \textit{Impedance method}. 
+Therefore we want to avoid using it in our computations. This leads to the use of the \textit{Impedance method}. The idea is to use the impedance ($\frac{T}{P}$) of different samples to find differences. Since both the Hydrodinamic and Fourier models are linear models, both allow for an impedance to be computed. The differences in the impedances would then show if there is a positive result. 
+
+We will perform different experiments with different geometries, and we will assume the total impedance is computed as $Z = Z_{\text{Heater}} + Z_{\text{Silicon}} $. Moreover, we will assume that the conductance on the heater is linear \todo{Maybe more reasonable to assume the conductance is affine?} with respect to the column width $w$. This leads to the formula $Z(\omega) = w^{-1}Z^0_{\text{Heater}}(\omega) + Z_{\text{Silicon}}(\omega)$. Now, using the numerical simulations for the heat dispersion equation, we can compute both the Fourier impedance $Z^0_{\text{Silicon}}$ and the derivative of the impedance with respect to the parameter ($Z^l_{\text{Silicon}}$). Using these numbers, we can com find the equality:
+
+\begin{equation}
+	Z(\omega) = w^{-1} Z^0_{\text{Heater}}(\omega) + Z^0_{\text{Silicon}}(\omega) + l^2 Z^l_{\text{Silicon}}(\omega)
+\end{equation}
+
+\todo[inline]{Check whether we have a first or second order effect with the drag conditions}
+
+And, denoting $\Delta Z = Z-Z^0_{Silicon}$ we se that now we have the linear regression:
+
+\begin{equation}
+	w \Delta Z = Z^0_{\text{Heater}}(\omega)  +  l^2 w Z^l_{\text{Silicon}}(\omega) 
+\end{equation}
+
+Note that in fact we have multiple linear regressions, one fo each $\omega$, so we can denoise by using multiple $\omega$ (but take into account that geometrical errors will induce huge correlations between the measures!)
+
 % section the_experiment (end)
 \end{document}
